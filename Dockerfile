@@ -13,6 +13,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm run generate
+
 EXPOSE 5000 
 
 CMD ["npm", "run", "start:dev"]
@@ -35,4 +37,5 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package*.json ./
 
 EXPOSE 5000
-CMD ["node", "dist/main.js"]
+CMD ["npx", "prisma" ,"migrate" ,"deploy"]
+CMD ["node", "dist/src/main.js"]

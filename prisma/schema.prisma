@@ -5,7 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+  moduleFormat = "commonjs"
 }
 
 datasource db {
@@ -22,6 +24,10 @@ model User {
 
   createdAt DateTime @map("create_at") @default(now())
   updatedAt DateTime @map("update_at") @updatedAt
+
+  isConfirm Boolean @default(false)
+
+  isActive Boolean @default(true)
 
   @@map("users")
 }

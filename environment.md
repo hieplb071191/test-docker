@@ -8,6 +8,7 @@
 - DB_USER=postgres
 - DB_PASSWORD=postgres
 - DB_NAME=test_db
+- DB_URL=postgresql://postgres:postgres@localhost:5432/postgres
 
 # jwt:
 - JWT_SECRET=hieplbtest123456
