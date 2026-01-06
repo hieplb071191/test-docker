@@ -8,6 +8,8 @@ import { createWinstonConfig } from './logger/winston.config';
 import { LoggerModule } from './logger/logger.module';
 import { LoggingInterceptor } from './logger/logging.intercepter';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UsersModule } from './modules/users/users.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
         createWinstonConfig(configService),
     }),
     LoggerModule,
+    UsersModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [
