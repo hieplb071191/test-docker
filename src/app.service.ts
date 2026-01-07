@@ -7,7 +7,9 @@ export class AppService {
   getHello(): any {
     return this.prismaService.user.findMany({
       where: {
-        id: '',
+        name: {
+          not: null,
+        },
       },
     });
   }

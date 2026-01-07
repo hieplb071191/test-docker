@@ -10,6 +10,7 @@ import { LoggingInterceptor } from './logger/logging.intercepter';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PrismaModule } from '../prisma/prisma.module';
     LoggerModule,
     UsersModule,
     PrismaModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

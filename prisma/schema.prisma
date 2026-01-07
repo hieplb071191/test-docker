@@ -14,26 +14,51 @@ datasource db {
   provider = "postgresql"
 }
 
+enum PlatformType {
+  LOCAL_APP
+  GOOGLE
+  APPLE
+  FACEBOOK
+  TIKTOK
+  TWITTER
+}
+
+model Address {
+  id String @id @default(uuid())
+  streetAddress String @map("string_address")
+  ward String
+  provinceCity String @map("province_city")
+  user User  @relation(fields: [userId], references: [id])
+  userId  String @unique
+
+  @@map("address")
+}
+
 model User {
   id    String     @id @default(uuid())
   email String  @unique
   name  String?
   password String
-
+  dateOfBirth DateTime @map("date_of_birth")
   posts     Post[]
+  address Address?
 
-  createdAt DateTime @map("create_at") @default(now())
-  updatedAt DateTime @map("update_at") @updatedAt
+  joinFromPlatform PlatformType @default(LOCAL_APP) @map("join_from_platform")
+  logoutAt DateTime? @map("logout_at")
+  createdAt DateTime? @map("create_at") @default(now())
+  updatedAt DateTime? @map("update_at") @updatedAt
 
-  isConfirm Boolean @default(false)
+  isConfirm Boolean @default(false) @map("is_confirm")
 
-  isActive Boolean @default(true)
+  isActive Boolean @default(true) @map("is_active")
+
+  avatar String?
 
   @@map("users")
 }
 
 model Post {
-  id        Int      @default(autoincrement()) @id
+  id        String   @default(uuid()) @id
   title     String
   content   String?
   published Boolean? @default(false)
