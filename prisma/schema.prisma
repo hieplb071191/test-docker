@@ -54,6 +54,10 @@ model User {
 
   avatar String?
 
+  role Role? @relation(fields: [roleId], references: [id])
+
+  roleId String?
+
   @@map("users")
 }
 
@@ -66,4 +70,23 @@ model Post {
   authorId  String?
 
   @@map("posts")
+}
+
+model Role {
+  id            String @default(uuid()) @id
+  name          String
+  description   String
+  permissions   Permission[]
+  users         User[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id            String @default(uuid()) @id
+  name          String
+  roleId        String  @map("role_id")
+  role          Role @relation(fields: [roleId], references: [id])
+
+  @@map("permissions")
 }

@@ -24,6 +24,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, documentBuilderConfig);
   SwaggerModule.setup('api', app, document);
+
   await app.listen(port).then(() => {
     console.log(
       `Application is running in ${env} mode on: http://localhost:${port}`,
