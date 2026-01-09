@@ -4,6 +4,7 @@ import { SignupDto } from './dto/signup.dto';
 import * as argon2 from 'argon2';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -49,9 +50,21 @@ export class AuthService {
     return argon2.verify(hashedPassword, password);
   }
 
-  async loginWithPassword(body: LoginDto): Promise<any> {
+  async verifyUser(body: LoginDto): Promise<Partial<User>> {
     const user = await this.prisma.user.findUnique({
       where: { email: body.email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        dateOfBirth: true,
+        avatar: true,
+        isFullPermission: true,
+        role: {
+          select: { name: true, permissions: { select: { name: true } } },
+        },
+      },
     });
 
     if (!user) {
@@ -63,9 +76,17 @@ export class AuthService {
       throw new BadRequestException('Email or password is incorrect');
     }
 
+    return user;
+  }
+
+  async loginWithPassword(body: LoginDto): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const user = (await this.verifyUser(body)) as any;
     const accessToken = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
+      ...user,
+      password: null,
+      role: null,
+      roles: user.role?.permissions?.map((p) => p.name),
     });
 
     return {

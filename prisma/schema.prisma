@@ -58,6 +58,8 @@ model User {
 
   roleId String?
 
+  isFullPermission Boolean @default(false)
+
   @@map("users")
 }
 
@@ -74,7 +76,7 @@ model Post {
 
 model Role {
   id            String @default(uuid()) @id
-  name          String
+  name          String @unique
   description   String
   permissions   Permission[]
   users         User[]
@@ -84,9 +86,8 @@ model Role {
 
 model Permission {
   id            String @default(uuid()) @id
-  name          String
-  roleId        String  @map("role_id")
-  role          Role @relation(fields: [roleId], references: [id])
+  name          String @unique
+  roles         Role[]
 
   @@map("permissions")
 }

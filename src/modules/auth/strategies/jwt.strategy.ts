@@ -15,6 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   validate(payload: Partial<any>) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return { userId: payload.id, email: payload.email };
+    return payload;
   }
 }

@@ -29,6 +29,6 @@ export class RolesGuard extends JwtAuthGuard {
       return true;
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    return requiredRoles.some((role) => user.roles.includes(role));
+    return requiredRoles.some((role) => user.roles?.includes(role));
   }
 }

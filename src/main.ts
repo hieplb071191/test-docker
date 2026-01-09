@@ -5,6 +5,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { SwaggerModule } from '@nestjs/swagger';
 import documentBuilderConfig from './swagger/document-builder.swagger';
 import { ValidationPipe } from '@nestjs/common';
+import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,17 @@ async function bootstrap() {
     }),
   );
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  app.use(
+    session({
+      secret: 'my-secret-key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+      },
+    }),
+  );
 
   const document = SwaggerModule.createDocument(app, documentBuilderConfig);
   SwaggerModule.setup('api', app, document);
