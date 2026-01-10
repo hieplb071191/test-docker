@@ -20,6 +20,7 @@ export class PermissionRolesGuard implements CanActivate {
     const user = request.session?.user;
 
     if (!user) return false;
+    if (user?.isFullPermission) return true;
 
     return requiredRoles.some((role) => user.roles?.includes(role));
   }

@@ -3,7 +3,8 @@ import {
   Controller,
   Get,
   Post,
-  Session, UseGuards,
+  Session,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -46,6 +47,12 @@ export class AuthController {
       roles: user.role?.permissions?.map((p) => p.name),
     };
     console.log(session);
+  }
+
+  @Post('logout')
+  logout(@Session() session: Record<string, any>) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    session.destroy();
   }
 
   @Permissions(PermissionEnum.READ_ROLE)
