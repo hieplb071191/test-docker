@@ -3,7 +3,7 @@ import {
   Controller,
   Get,
   Post,
-  Session,
+  Session, UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -11,6 +11,10 @@ import { SignupDto } from './dto/signup.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { LoggingInterceptor } from '../../logger/logging.intercepter';
 import { LoginDto } from './dto/login.dto';
+import { SessionAuthGuard } from './guard/session-auth.guard';
+import { PermissionRolesGuard } from './guard/session-role.guard';
+import { PermissionEnum } from '../shares/enum/permission.enum';
+import { Permissions } from './decorator/permission.decorator';
 
 @UseInterceptors(LoggingInterceptor)
 @Controller('auth')
@@ -37,10 +41,15 @@ export class AuthController {
     session.visits = session.visits ? session.visits + 1 : 1;
     const user: any = await this.authService.verifyUser(body);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    session.user = user;
+    session.user = {
+      ...user,
+      roles: user.role?.permissions?.map((p) => p.name),
+    };
     console.log(session);
   }
 
+  @Permissions(PermissionEnum.READ_ROLE)
+  @UseGuards(SessionAuthGuard, PermissionRolesGuard)
   @Get('me')
   getProfile(@Session() session: Record<string, any>) {
     console.log(session.id);
